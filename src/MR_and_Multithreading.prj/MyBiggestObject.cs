@@ -8,7 +8,17 @@ namespace MR_and_Multithreading
 {
 	public class MyBiggestObject
 	{
-		public readonly byte[] Memory = new byte[1024 * 500];
+		public readonly byte[] Memory = new byte[5];
+
+		public void FillMemoryRandom()
+		{
+			Random random = new Random();
+			for(int i = 0; i < Memory.Length; i++)
+			{
+				Memory[i] = (byte)random.Next(byte.MinValue, byte.MaxValue);
+				Console.WriteLine($"{i} = {Memory[i]}");
+			}
+		}
 	}
 }
 

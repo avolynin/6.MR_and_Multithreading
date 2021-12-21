@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace MR_and_Multithreading
 {
@@ -11,16 +12,21 @@ namespace MR_and_Multithreading
 		{
 			var cache = new WeakReferenceCache<MyBiggestObject>(() 
 				=> new MyBiggestObject());
-			
-			using(var entry = cache.GetEntry())
-			{
-				ProcessData(entry.Value);
-			}
-		}
 
-		static void ProcessData(MyBiggestObject entry)
-		{
-			Console.WriteLine($"Length of memory: {entry.Memory.Length}");
+			Thread[] threads = new Thread[5];
+			for(int i = 0; i < 5; i++)
+			{
+				using(var entry = cache.GetEntry())
+				{
+					threads[i] = new Thread(entry.Value.FillMemoryRandom)
+					{
+						Name = "Thread №" + i.ToString(),
+						IsBackground = true
+					};
+					threads[i].Start();
+					threads[i].Join();
+				}
+			}
 		}
 	}
 }

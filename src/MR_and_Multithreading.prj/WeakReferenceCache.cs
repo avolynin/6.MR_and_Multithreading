@@ -9,6 +9,7 @@ namespace MR_and_Multithreading
 {
 	class WeakReferenceCache<T> : ICache<T> where T: class
 	{
+		private static object locker = new object();
 		private Func<T> _func;
 		private WeakReference<ICacheEntry<T>> _ref;
 
@@ -20,13 +21,16 @@ namespace MR_and_Multithreading
 
 		public ICacheEntry<T> GetEntry()
 		{
-			ICacheEntry<T> entry = null;
-			if(!_ref.TryGetTarget(out entry))
+			lock(locker)
 			{
-				entry = new CacheEntry<T>(_func());
-				_ref = new WeakReference<ICacheEntry<T>>(entry);
+				ICacheEntry<T> entry = null;
+				if(!_ref.TryGetTarget(out entry))
+				{
+					entry = new CacheEntry<T>(_func());
+					_ref = new WeakReference<ICacheEntry<T>>(entry);
+				}
+				return entry;
 			}
-			return entry;
 		}
 	}
 }
