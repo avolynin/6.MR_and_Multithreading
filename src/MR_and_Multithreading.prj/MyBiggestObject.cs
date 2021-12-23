@@ -10,6 +10,7 @@ namespace MR_and_Multithreading
 	{
 		public readonly byte[] Memory = new byte[5];
 
+		/// <summary>Заполнение памяти рандомными числами.</summary>
 		public void FillMemoryRandom()
 		{
 			Random random = new Random();

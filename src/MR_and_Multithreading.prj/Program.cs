@@ -14,9 +14,9 @@ namespace MR_and_Multithreading
 				=> new MyBiggestObject());
 
 			Thread[] threads = new Thread[5];
-			for(int i = 0; i < 5; i++)
+			using(var entry = cache.GetEntry())
 			{
-				using(var entry = cache.GetEntry())
+				for(int i = 0; i < 5; i++)
 				{
 					threads[i] = new Thread(entry.Value.FillMemoryRandom)
 					{
